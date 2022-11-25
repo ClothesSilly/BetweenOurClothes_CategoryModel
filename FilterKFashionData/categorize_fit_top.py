@@ -1,6 +1,5 @@
 """
 오류없이 끝까지 돌아간 결과
-[1847, 4000, 496, 4000, 935, 4000, 0, 617, 2083, 3095, 0, 268, 4000, 4000, 4000, 1717, 2760, 521, 1392, 1269, 0, 0, 4000, 4000, 0]
 """
 import sys
 import os
@@ -15,8 +14,8 @@ count = 0
 check = [False, False, False, False]
 category = ["상의", "하의", "아우터", "원피스"]
 #상->하->아우터->원피스
-material_dict = ["퍼","니트","무스탕","레이스","스웨이드","린넨","앙고라","메시","코듀로이","플리스","시퀸/글리터","네오프렌","데님","실크","저지","스판덱스","트위드","자카드","벨벳","가죽","비닐/PVC","면","울&캐시미어","시폰","합성섬유"]
-final_result = [0] * 25
+fit_dict = ["타이트","노멀","루즈","오버사이즈"]
+final_result = [0] * 4
 
 for style_folder in file_list:
 
@@ -56,23 +55,21 @@ for style_folder in file_list:
             now_true_idx = check.index(True)
             #상/하의/아우터/원피스
             now_category_main = category[now_true_idx]
+            #하의는 별도의 모델에서 fit을 분류할 것임
+            if now_category_main == "하의":
+                continue
 
-            if data["데이터셋 정보"]["데이터셋 상세설명"]["라벨링"][now_category_main][0].get("소재") != None:
-                now_material = data["데이터셋 정보"]["데이터셋 상세설명"]["라벨링"][now_category_main][0].get("소재")[0]
-                if now_material == "울/캐시미어":
-                    now_material = "울&캐시미어"
-                if now_material == "시퀸/글리터":
-                    now_material = "시퀸&글리터"
-                if now_material == "비닐/PVC":
-                    now_material = "비닐&PVC"
-                if now_material not in material_dict:
-                    continue
+            if data["데이터셋 정보"]["데이터셋 상세설명"]["라벨링"][now_category_main][0].get("핏") != None:
+                now_fit = data["데이터셋 정보"]["데이터셋 상세설명"]["라벨링"][now_category_main][0].get("핏")
+
+                # if now_material not in material_dict:
+                #     continue
                 #각 카테고리 별 10000개씩만 가져오도록
-                if final_result[material_dict.index(now_material)] >= 4000:
+                if final_result[fit_dict.index(now_fit)] >= 10000:
                     continue
-                final_result[material_dict.index(now_material)] += 1
+                final_result[fit_dict.index(now_fit)] += 1
                 # json 파일 복사
-                shutil.copyfile(now_style_folder_path + file_name, base_dir + "25material/" + now_material + "/label/" + file_name)
+                shutil.copyfile(now_style_folder_path + file_name, base_dir + "4fit_top/" + now_fit + "/label/" + file_name)
                 # 이미지 파일 복사
-                shutil.copyfile(base_dir + style_folder + "/" + file_name_num + ".jpg", base_dir + "25material/" + now_material + "/image/" + file_name_num + ".jpg")
+                shutil.copyfile(base_dir + style_folder + "/" + file_name_num + ".jpg", base_dir + "4fit_top/" + now_fit + "/image/" + file_name_num + ".jpg")
 
