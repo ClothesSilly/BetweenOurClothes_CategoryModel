@@ -1,3 +1,7 @@
+"""
+오류 없이 Training data 모두 다 돌았을 때 결과
+[5000, 566, 5000, 5000, 4945, 5000, 5000, 1976, 5000, 5000, 890, 5000, 3958, 5000, 5000, 5000, 5000, 2328, 5000, 4337, 5000]
+"""
 import sys
 import os
 import json
@@ -21,6 +25,8 @@ for style_folder in file_list:
 
     now_style_folder_path = path_dir + style_folder +"/"
     for file_name in os.listdir(now_style_folder_path):
+        if file_name == ".DS_Store":
+            continue
         if sum(final_result) % 1000 == 0:
             print(final_result)
         #.json을 제외한 파일 이름 숫자

@@ -15,6 +15,8 @@ for style_folder in file_list:
 
     now_style_folder_path = path_dir + style_folder +"/"
     for file_name in os.listdir(now_style_folder_path):
+        if file_name == ".DS_Store":
+            continue
         #### final_result 확인하기
 
         #.json을 제외한 파일 이름 숫자
