@@ -1,7 +1,7 @@
 """
 오류없이 끝까지 돌아간 결과
-[10000, 10000, 10000, 10000]
-구성완료
+
+
 """
 import sys
 import os
@@ -16,8 +16,8 @@ count = 0
 check = [False, False, False, False]
 category = ["상의", "하의", "아우터", "원피스"]
 #상->하->아우터->원피스
-fit_dict = ["스키니","노멀","와이드","루즈","벨보텀"]
-final_result = [0] * 5
+length_dict = ["크롭", "노멀","롱"]
+final_result = [0] * 3
 
 for style_folder in file_list:
 
@@ -41,10 +41,11 @@ for style_folder in file_list:
         if len(data["데이터셋 정보"]["데이터셋 상세설명"]["렉트좌표"]["상의"][0]) != 0:
             count += 1
             check[0] = True
-            continue
+
         if len(data["데이터셋 정보"]["데이터셋 상세설명"]["렉트좌표"]["하의"][0]) != 0:
             count += 1
             check[1] = True
+            continue
         if len(data["데이터셋 정보"]["데이터셋 상세설명"]["렉트좌표"]["아우터"][0]) != 0:
             count += 1
             check[2] = True
@@ -61,20 +62,20 @@ for style_folder in file_list:
             #상/하의/아우터/원피스
             now_category_main = category[now_true_idx]
 
-            if now_category_main != "하의":
+            if now_category_main != "상의":
                 continue
 
-            if data["데이터셋 정보"]["데이터셋 상세설명"]["라벨링"][now_category_main][0].get("핏") != None:
-                now_fit = data["데이터셋 정보"]["데이터셋 상세설명"]["라벨링"][now_category_main][0].get("핏")
+            if data["데이터셋 정보"]["데이터셋 상세설명"]["라벨링"][now_category_main][0].get("기장") != None:
+                now_fit = data["데이터셋 정보"]["데이터셋 상세설명"]["라벨링"][now_category_main][0].get("기장")
 
                 # if now_material not in material_dict:
                 #     continue
                 #각 카테고리 별 10000개씩만 가져오도록
-                if final_result[fit_dict.index(now_fit)] >= 10000:
+                if final_result[length_dict.index(now_fit)] >= 10000:
                     continue
-                final_result[fit_dict.index(now_fit)] += 1
+                final_result[length_dict.index(now_fit)] += 1
                 # json 파일 복사
-                shutil.copyfile(now_style_folder_path + file_name, base_dir + "5fit_pants/" + now_fit + "/label/" + file_name)
+                shutil.copyfile(now_style_folder_path + file_name, base_dir + "3length_top/" + now_fit + "/label/" + file_name)
                 # 이미지 파일 복사
-                shutil.copyfile(base_dir + style_folder + "/" + file_name_num + ".jpg", base_dir + "5fit_pants/" + now_fit + "/image/" + file_name_num + ".jpg")
+                shutil.copyfile(base_dir + style_folder + "/" + file_name_num + ".jpg", base_dir + "3length_top/" + now_fit + "/image/" + file_name_num + ".jpg")
 
