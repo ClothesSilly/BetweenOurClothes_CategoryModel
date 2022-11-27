@@ -64,7 +64,7 @@ for style_folder in file_list:
                 if now_color == "실버":
                     now_color = "그레이"
                 #각 카테고리 별 10000개씩만 가져오도록
-                if final_result[color_dict.index(now_color)] >= 3000:
+                if final_result[color_dict.index(now_color)] >= 500:
                     continue
                 final_result[color_dict.index(now_color)] += 1
                 # json 파일 복사
