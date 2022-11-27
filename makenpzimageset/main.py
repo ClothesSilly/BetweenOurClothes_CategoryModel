@@ -25,8 +25,10 @@ def adjust_size_800(image):
 path_dir = "/Users/ymp/Desktop/KFashionImage/Training/20color/"
 file_list = os.listdir(path_dir)
 # 라벨 데이터를 one-hot encoding형태로 구성해줘야하기 때문에 순서대로 list에 작성해준다
-label_list = ["블랙", "화이트", "그레이","레드", "핑크","오렌지","베이지","브라운","옐로우","그린","카키","민트","블루","네이비","스카이블루","퍼플","라벤더","와인","네온","골드"]
+label_list = ['black', 'white', 'gray','red', 'pink','orange','beige','brown','yellow','green','khaki','mint','blue','navy','skyblue','purple','lavender','wine','neon','gold']
+# print(label_list.index("레드"))
 
+one_hot_label = [0] * len(label_list)
 #
 image_train = []
 label_train = []
@@ -35,20 +37,31 @@ label_train = []
 image_test = []
 label_test = []
 
+folder_count = 0
+
 #folder는 label_list값들이 차례로 나오게 된다.
 for folder in file_list:
+    print(type(folder))
     if folder == ".DS_Store":
         continue
+    folder_count += 1
+    print(folder_count)
+    print(label_list)
+    # one-hot encoding형태의 label data array를 설정해준다.
+    now_label_idx = label_list.index(str(folder))
+    one_hot_label = [0] * len(label_list)
+    one_hot_label[now_label_idx] = 1
 
     now_folder_image_path = path_dir + folder + "/image/"
-    now_folder_label_path = path_dir + folder + "/label/"
 
     # 이미지 데이터를 train, test로 나누어 저장 7:3
     now_folder_image_list = os.listdir(now_folder_image_path)
     now_folder_image_list_num = len(os.listdir(now_folder_image_path))
 
+    # 이 부분은 이미지를 나누어 저장해주면서, 어차피 들어와있는 디렉토리 파일이 label을 의미하니까 같이 append 해줌
     for idx, file_name in enumerate(now_folder_image_list):
-        print(idx)
+        if idx % 100 == 0:
+            print(idx)
         if file_name == ".DS_Store":
             continue
 
@@ -61,27 +74,23 @@ for folder in file_list:
         # 나누어 train과 test에 이어붙임
         if idx < (now_folder_image_list_num * 7) // 10:
             image_train.append(image)
+            label_train.append(one_hot_label)
         else:
             image_test.append(image)
+            label_test.append(one_hot_label)
 
-    break
+    # 이 부분에서 one-hot encoding형태로 label데이터에 채워넣어야함.
+
+
 #npz로 저장하기 전에 numpy array로 변환
 image_train = np.array(image_train)
 label_train = np.array(label_train)
 
 image_test = np.array(image_test)
 label_test = np.array(label_test)
-print(image_train.shape, image_test.shape)
+print(image_train.shape, label_train.shape,image_test.shape, label_test.shape)
 
-        # print(len(image_train))
-        # s = np.array(image_train)
-        # print(s.shape)
-
-
-        # cv2.imshow("ll",image)
-        # cv2.waitKey(0)
-        #print(file_name)
-
+np.savez_compressed("/Users/ymp/Desktop/KFashionImage/Training/20color/20color", image_train=image_train, label_train=label_train, image_test=image_test, label_test=label_test)
 
 
 
